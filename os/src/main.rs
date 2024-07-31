@@ -6,7 +6,7 @@ mod lang_items;
 
 global_asm!(include_str!("entry.asm"));
 
-#[allow(dead_code)]
-fn main() {
-    // println!("Hello, world!");
+#[no_mangle]
+fn main() -> ! {
+    loop {}
 }
