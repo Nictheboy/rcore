@@ -1,1 +1,0 @@
-rustsbi-qemu.bin is from https://github.com/rustsbi/rustsbi-qemu
