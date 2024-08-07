@@ -1,5 +1,6 @@
 MAKEFLAGS += --no-print-directory
 
+.PHONY: all clean os-bin-debug os-bin-release opensbi debug
 all: opensbi os-bin-debug os-bin-release
 
 clean:

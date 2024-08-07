@@ -7,6 +7,7 @@ ELF_RELEASE=target/$(TARGET)/release/$(PROJECT)
 BIN_DEBUG=target/$(TARGET)/debug/$(PROJECT).bin
 BIN_RELEASE=target/$(TARGET)/release/$(PROJECT).bin
 
+.PHONY: all clean elf-debug elf-release bin-debug bin-release
 all: bin-debug bin-release
 
 clean:
