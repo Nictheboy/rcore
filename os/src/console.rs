@@ -36,3 +36,17 @@ macro_rules! println {
         $crate::console::print(format_args!(concat!($fmt, "\n") $(, $($arg)+)?));
     }
 }
+
+#[macro_export]
+macro_rules! printk {
+    ($fmt: literal $(, $($arg: tt)+)?) => {
+        $crate::console::print(format_args!(concat!("[kernel] ", $fmt), $(, $($arg)+)?));
+    }
+}
+
+#[macro_export]
+macro_rules! printkln {
+    ($fmt: literal $(, $($arg: tt)+)?) => {
+        $crate::console::print(format_args!(concat!("[kernel] ", $fmt, "\n") $(, $($arg)+)?));
+    }
+}
