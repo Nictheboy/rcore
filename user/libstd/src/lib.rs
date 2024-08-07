@@ -55,6 +55,20 @@ fn panic(info: &PanicInfo) -> ! {
     sys_exit(1);
 }
 
+fn clear_bss() {
+    extern "C" {
+        fn sbss();
+        fn ebss();
+    }
+    unsafe {
+        let mut bss_ptr = sbss as *mut usize;
+        while bss_ptr < ebss as *mut usize {
+            *bss_ptr = 0;
+            bss_ptr = bss_ptr.offset(size_of::<usize>() as isize);
+        }
+    }
+}
+
 extern "C" {
     fn main() -> usize;
 }
@@ -62,7 +76,7 @@ extern "C" {
 #[no_mangle]
 #[link_section = ".text.entry"]
 pub extern "C" fn _start() -> ! {
-    // clear_bss();
+    clear_bss();
     unsafe {
         exit(main());
     }
