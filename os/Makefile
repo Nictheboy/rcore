@@ -4,28 +4,25 @@ PROJECT=os
 
 ELF_DEBUG=target/$(TARGET)/debug/$(PROJECT)
 ELF_RELEASE=target/$(TARGET)/release/$(PROJECT)
-BIN_DEBUG=target/$(TARGET)/debug/$(PROJECT).bin
-BIN_RELEASE=target/$(TARGET)/release/$(PROJECT).bin
+BIN_DEBUG=target/$(PROJECT)_debug.bin
+BIN_RELEASE=target/$(PROJECT)_release.bin
 
-.PHONY: all clean elf-debug elf-release bin-debug bin-release
+.PHONY: all clean elf-debug elf-release bin-debug bin-release FORCE
 all: bin-debug bin-release
 
 clean:
 	@cargo clean
 
-elf-debug:
-	@cargo build
-
-elf-release:
-	@cargo build --release
-
+elf-debug: $(ELF_DEBUG)
+elf-release: $(ELF_RELEASE)
 bin-debug: $(BIN_DEBUG)
-
 bin-release: $(BIN_RELEASE)
 
-$(ELF_DEBUG): elf-debug
-$(ELF_RELEASE): elf-release
-$(BIN_DEBUG): elf-debug
-	$(OBJCOPY) --strip-all target/$(TARGET)/debug/$(PROJECT) -O binary target/$(TARGET)/debug/$(PROJECT).bin
-$(BIN_RELEASE): elf-release
-	$(OBJCOPY) --strip-all target/$(TARGET)/release/$(PROJECT) -O binary target/$(TARGET)/release/$(PROJECT).bin
+$(ELF_DEBUG): FORCE
+	@cargo build
+$(ELF_RELEASE): FORCE
+	@cargo build --release
+$(BIN_DEBUG): $(ELF_DEBUG)
+	@$(OBJCOPY) --strip-all $(ELF_DEBUG) -O binary $(BIN_DEBUG)
+$(BIN_RELEASE): $(ELF_RELEASE)
+	@$(OBJCOPY) --strip-all $(ELF_RELEASE) -O binary $(BIN_RELEASE)
