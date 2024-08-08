@@ -1,12 +1,12 @@
 MAKEFLAGS += --no-print-directory
 
-IMG ?= target/img_hello_world_debug.bin
+IMG ?= target/hello_world_debug.bin
 
 .PHONY: FORCE all clean opensbi user-programs debug-imgs release-imgs debug
 all: opensbi debug-imgs release-imgs
 
 clean:
-	@$(MAKE) -s -C os clean
+	@$(MAKE) -s -C kernel clean
 	@$(MAKE) -s -C user clean
 	@$(MAKE) -s -C third_party/opensbi clean
 	@rm -rf target
@@ -18,10 +18,10 @@ user-programs:
 	@$(MAKE) -s -C user
 
 debug-imgs:	user-programs
-	@$(MAKE) -s $(patsubst user/target/%_debug.bin, target/img_%_debug.bin, $(wildcard user/target/*_debug.bin))
+	@$(MAKE) -s $(patsubst user/target/%_debug.bin, target/%_debug.bin, $(wildcard user/target/*_debug.bin))
 
 release-imgs: user-programs
-	@$(MAKE) -s $(patsubst user/target/%_release.bin, target/img_%_release.bin, $(wildcard user/target/*_release.bin))
+	@$(MAKE) -s $(patsubst user/target/%_release.bin, target/%_release.bin, $(wildcard user/target/*_release.bin))
 
 run: all
 	@qemu-system-riscv64 \
@@ -46,24 +46,24 @@ debug: all
 		-ex 'c'
 	@kill $$(lsof -t -i:1234)
 
-target/os_debug.bin: FORCE
-	@$(MAKE) -s -C os bin-debug
+target/kernel_debug.bin: FORCE
+	@$(MAKE) -s -C kernel bin-debug
 	@mkdir -p target
-	@cp os/target/os_debug.bin target/os_debug.bin
+	@cp kernel/target/kernel_debug.bin target/kernel_debug.bin
 
-target/os_release.bin: FORCE
-	@$(MAKE) -s -C os bin-release
+target/kernel_release.bin: FORCE
+	@$(MAKE) -s -C kernel bin-release
 	@mkdir -p target
-	@cp os/target/os_release.bin target/os_release.bin
+	@cp kernel/target/kernel_release.bin target/kernel_release.bin
 
-target/img_%_debug.bin: target/os_debug.bin user/target/%_debug.bin
+target/%_debug.bin: target/kernel_debug.bin user/target/%_debug.bin
 	@echo "Creating $@"
-	@cp target/os_debug.bin $@
+	@cp target/kernel_debug.bin $@
 	@truncate $@ --size 2MiB
 	@cat user/target/$*_debug.bin >> $@
 
-target/img_%_release.bin: target/os_release.bin user/target/%_release.bin
+target/%_release.bin: target/kernel_release.bin user/target/%_release.bin
 	@echo "Creating $@"
-	@cp target/os_release.bin $@
+	@cp target/kernel_release.bin $@
 	@truncate $@ --size 2MiB
 	@cat user/target/$*_release.bin >> $@

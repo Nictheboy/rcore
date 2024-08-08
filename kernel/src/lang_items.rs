@@ -1,5 +1,10 @@
+use palloc::SpinPalloc;
+
 use crate::println;
 use core::panic::PanicInfo;
+
+#[global_allocator]
+pub static mut ALLOCATOR: SpinPalloc = SpinPalloc::empty();
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {

@@ -1,6 +1,6 @@
 OBJCOPY=rust-objcopy
 TARGET=riscv64gc-unknown-none-elf
-PROJECT=os
+PROJECT=kernel
 
 ELF_DEBUG=target/$(TARGET)/debug/$(PROJECT)
 ELF_RELEASE=target/$(TARGET)/release/$(PROJECT)

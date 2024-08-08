@@ -1,5 +1,6 @@
-.align 2
-.global _trap_handler
+    .section .text
+    .align 2
+    .global _trap_handler
 _trap_handler:
     csrrw sp, sscratch, sp  # Swap sp to kernel stack
     addi sp, sp, -34*8      # Allocate 34 bytes for saving registers

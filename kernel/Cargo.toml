@@ -1,7 +1,8 @@
 [package]
-name = "os"
+name = "kernel"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+palloc = "0.1.3"
 sbi-rt = "0.0.3"
