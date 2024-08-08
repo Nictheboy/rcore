@@ -2,6 +2,7 @@
 
 use core::{
     fmt::{Arguments, Write},
+    mem::size_of,
     panic::PanicInfo,
 };
 use sys::{sys_exit, sys_write};
