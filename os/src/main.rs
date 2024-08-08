@@ -48,7 +48,8 @@ fn switch_to_user(user_pc: usize, user_sp: usize) -> ! {
         asm!(
             "csrw sepc, {user_pc}",
             "csrw sstatus, {sstatus}",
-            "mv sp, {user_sp}",
+            "csrw sscratch, {user_sp}",
+            "csrrw sp, sscratch, sp",
             "sret",
             user_pc = in(reg) user_pc,
             sstatus = in(reg) sstatus,
